@@ -26,20 +26,33 @@ In order to train the model using the provided code, the data needs to be format
 
 For [KITTI](http://www.cvlibs.net/datasets/kitti/raw_data.php), first download the dataset using this [script](http://www.cvlibs.net/download.php?file=raw_data_downloader.zip) provided on the official website, and then run the following command
 ```bash
-python data/prepare_train_data.py --dataset_dir=/path/to/raw/kitti/dataset/ --dataset_name='kitti_raw_eigen' --dump_root=/path/to/resulting/formatted/data/ --seq_length=3 --img_width=416 --img_height=128 --num_threads=4
+python data/prepare_train_data.py --dataset_dir=/path/to/raw/kitti/dataset/      \
+                                  --dataset_name='kitti_raw_eigen'                \
+                                  --dump_root=/path/to/resulting/formatted/data/   \
+                                  --seq_length=3     \
+                                  --img_width=416     \
+                                  --img_height=128     \
+                                  --num_threads=4       \
 ```
 For the pose experiments, we used the KITTI odometry split, which can be downloaded [here](http://www.cvlibs.net/datasets/kitti/eval_odometry.php). Then you can change `--dataset_name` option to `kitti_odom` when preparing the data.
 
 For [Cityscapes](https://www.cityscapes-dataset.com/), download the following packages: 1) `leftImg8bit_sequence_trainvaltest.zip`, 2) `camera_trainvaltest.zip`. Then run the following command
 ```bash
-python data/prepare_train_data.py --dataset_dir=/path/to/cityscapes/dataset/ --dataset_name='cityscapes' --dump_root=/path/to/resulting/formatted/data/ --seq_length=3 --img_width=416 --img_height=171 --num_threads=4
+python data/prepare_train_data.py --dataset_dir=/path/to/cityscapes/dataset/     \
+                                  --dataset_name='cityscapes'                     \
+                                  --dump_root=/path/to/resulting/formatted/data/   \
+                                  --seq_length=3 \
+                                  --img_width=416 \
+                                  --img_height=171 \
+                                  --num_threads=4
 ```
 Notice that for Cityscapes the `img_height` is set to 171 because we crop out the bottom part of the image that contains the car logo, and the resulting image will have height 128.
 
 ## Training
 Once the data are formatted following the above instructions, you should be able to train the model by running the following command
 ```bash
-python train.py --dataset_dir=/path/to/the/formatted/data/ --checkpoint_dir=/where/to/store/checkpoints/ --img_width=416 --img_height=128 --batch_size=4
+python train.py --dataset_dir=/path/to/the/formatted/data/ --checkpoint_dir=/where/to/store/checkpoints/ \
+                --img_width=416 --img_height=128 --batch_size=4
 ```
 You can then start a `tensorboard` session by
 ```bash
@@ -69,7 +82,8 @@ bash ./kitti_eval/download_kitti_depth_predictions.sh
 ```
 Then run
 ```bash
-python kitti_eval/eval_depth.py --kitti_dir=/path/to/raw/kitti/dataset/ --pred_file=kitti_eval/kitti_eigen_depth_predictions.npy
+python kitti_eval/eval_depth.py --kitti_dir=/path/to/raw/kitti/dataset/ \
+                                --pred_file=kitti_eval/kitti_eigen_depth_predictions.npy
 ```
 If everything runs properly, you should get the numbers for `Ours(CS+K)` in Table 1 of the paper. To get the numbers for `Ours cap 50m (CS+K)`, set an additional flag `--max_depth=50` when executing the above command.
 
@@ -80,11 +94,13 @@ bash ./kitti_eval/download_kitti_pose_eval_data.sh
 ```
 Notice that all the predictions and ground-truth are 5-frame snippets with the format of `timestamp tx ty tz qx qy qz qw` consistent with the [TUM evaluation toolkit](https://vision.in.tum.de/data/datasets/rgbd-dataset/tools#evaluation). Then you could run 
 ```bash
-python kitti_eval/eval_pose.py --gtruth_dir=/directory/of/groundtruth/trajectory/files/ --pred_dir=/directory/of/predicted/trajectory/files/
+python kitti_eval/eval_pose.py --gtruth_dir=/directory/of/groundtruth/trajectory/files/ \
+                               --pred_dir=/directory/of/predicted/trajectory/files/
 ```
 to obtain the results reported in Table 3 of the paper. For instance, to get the results of `Ours` for `Seq. 10` you could run
 ```bash
-python kitti_eval/eval_pose.py --gtruth_dir=kitti_eval/pose_data/ground_truth/10/ --pred_dir=kitti_eval/pose_data/ours_results/10/
+python kitti_eval/eval_pose.py --gtruth_dir=kitti_eval/pose_data/ground_truth/10/ \
+                               --pred_dir=kitti_eval/pose_data/ours_results/10/
 ```
 
 ## KITTI Testing code
@@ -92,7 +108,9 @@ python kitti_eval/eval_pose.py --gtruth_dir=kitti_eval/pose_data/ground_truth/10
 ### Depth
 Once you have model trained, you can obtain the single-view depth predictions on the KITTI eigen test split formatted properly for evaluation by running
 ```bash
-python test_kitti_depth.py --dataset_dir /path/to/raw/kitti/dataset/ --output_dir /path/to/output/directory --ckpt_file /path/to/pre-trained/model/file/
+python test_kitti_depth.py --dataset_dir /path/to/raw/kitti/dataset/ \
+                           --output_dir /path/to/output/directory    \
+                           --ckpt_file /path/to/pre-trained/model/file/
 ```
 Again, a sample model can be downloaded by
 ```bash
@@ -102,7 +120,9 @@ bash ./models/download_depth_model.sh
 ### Pose
 We also provide sample testing code for obtaining pose predictions on the KITTI dataset with a pre-trained model. You can obtain the predictions formatted as above for pose evaluation by running
 ```bash
-python test_kitti_pose.py --test_seq [sequence_id] --dataset_dir /path/to/KITTI/odometry/set/ --output_dir /path/to/output/directory/ --ckpt_file /path/to/pre-trained/model/file/
+python test_kitti_pose.py --test_seq [sequence_id] --dataset_dir /path/to/KITTI/odometry/set/ \
+                          --output_dir /path/to/output/directory/  \
+                          --ckpt_file /path/to/pre-trained/model/file/
 ```
 A sample model trained on 5-frame snippets can be downloaded by
 ```bash
@@ -110,7 +130,8 @@ bash ./models/download_pose_model.sh
 ```
 Then you can obtain predictions on, say `Seq. 9`, by running
 ```bash
-python test_kitti_pose.py --test_seq 9 --dataset_dir /path/to/KITTI/odometry/set/ --output_dir /path/to/output/directory/ --ckpt_file models/model-100280
+python test_kitti_pose.py --test_seq 9 --dataset_dir /path/to/KITTI/odometry/set/ \
+                          --output_dir /path/to/output/directory/ --ckpt_file models/model-100280
 ```
 
 ## Other implementations
