@@ -51,7 +51,8 @@ Notice that for Cityscapes the `img_height` is set to 171 because we crop out th
 ## Training
 Once the data are formatted following the above instructions, you should be able to train the model by running the following command
 ```bash
-python train.py --dataset_dir=/path/to/the/formatted/data/ --checkpoint_dir=/where/to/store/checkpoints/ \
+python train.py --dataset_dir=/path/to/the/formatted/data/ \
+                --checkpoint_dir=/where/to/store/checkpoints/ \
                 --img_width=416 --img_height=128 --batch_size=4
 ```
 You can then start a `tensorboard` session by
