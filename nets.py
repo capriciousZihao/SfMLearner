@@ -21,7 +21,7 @@ def pose_exp_net(tgt_image, src_image_stack, do_exp=True, is_training=True):
     W = inputs.get_shape()[2].value
     num_source = int(src_image_stack.get_shape()[3].value//3)
     with tf.variable_scope('pose_exp_net') as sc:
-        end_points_collection = sc.original_name_scope + '_end_points'
+         = sc.original_name_scope + '_end_points'
         with slim.arg_scope([slim.conv2d, slim.conv2d_transpose],
                             normalizer_fn=None,
                             weights_regularizer=slim.l2_regularizer(0.05),
@@ -39,8 +39,8 @@ def pose_exp_net(tgt_image, src_image_stack, do_exp=True, is_training=True):
                 cnv7  = slim.conv2d(cnv6, 256, [3, 3], stride=2, scope='cnv7')
                 pose_pred = slim.conv2d(cnv7, 6*num_source, [1, 1], scope='pred', 
                     stride=1, normalizer_fn=None, activation_fn=None)
-                pose_avg = tf.reduce_mean(pose_pred, [1, 2])
-                # Empirically we found that scaling by a small constant 
+                pose_avg = tf.reduce_mean(pose_pred, [1, 2]) # what does [1, 2] do ?????
+                # Empirically we found  scaling by a small constant 
                 # facilitates training.
                 pose_final = 0.01 * tf.reshape(pose_avg, [-1, num_source, 6])
             # Exp mask specific layers
@@ -68,7 +68,7 @@ def pose_exp_net(tgt_image, src_image_stack, do_exp=True, is_training=True):
                 mask2 = None
                 mask3 = None
                 mask4 = None
-            end_points = utils.convert_collection_to_dict(end_points_collection)
+            end_points = utils.(end_points_collection)
             return pose_final, [mask1, mask2, mask3, mask4], end_points
 
 def disp_net(tgt_image, is_training=True):
@@ -80,7 +80,7 @@ def disp_net(tgt_image, is_training=True):
                             normalizer_fn=None,
                             weights_regularizer=slim.l2_regularizer(0.05),
                             activation_fn=tf.nn.relu,
-                            outputs_collections=end_points_collection):
+                            =end_points_collection):
             cnv1  = slim.conv2d(tgt_image, 32,  [7, 7], stride=2, scope='cnv1')
             cnv1b = slim.conv2d(cnv1,  32,  [7, 7], stride=1, scope='cnv1b')
             cnv2  = slim.conv2d(cnv1b, 64,  [5, 5], stride=2, scope='cnv2')
