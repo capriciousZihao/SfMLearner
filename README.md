@@ -32,7 +32,7 @@ python data/prepare_train_data.py --dataset_dir=/path/to/raw/kitti/dataset/     
                                   --seq_length=3     \
                                   --img_width=416     \
                                   --img_height=128     \
-                                  --num_threads=4       \
+                                  --num_threads=4       
 ```
 For the pose experiments, we used the KITTI odometry split, which can be downloaded [here](http://www.cvlibs.net/datasets/kitti/eval_odometry.php). Then you can change `--dataset_name` option to `kitti_odom` when preparing the data.
 
